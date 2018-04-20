@@ -1,7 +1,7 @@
 import java.util.*;
 public class Piece
 {
-	protected int x, y;
+    protected int x, y;
     protected int player;
     
     Piece ()

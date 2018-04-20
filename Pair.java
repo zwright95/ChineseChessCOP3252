@@ -12,6 +12,11 @@ class Pair
         y = b;
     }
      
+    public boolean equals (Pair a)
+    {
+        return equals(a.x, a.y);
+    }
+        
     public boolean equals (int a, int b)
     {
         return x == a && y == b;

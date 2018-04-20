@@ -1,9 +1,9 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Pieces{
-	private final ArrayList<Piece> pieces;
+public class Pieces
+{
+    private final ArrayList<Piece> pieces;
     private int [][] board_state;
     static Piece error;
     //these represent the points that pieces will be placed on the screen
@@ -224,8 +224,55 @@ public class Pieces{
         return player_pieces;
     }
 
-    //public boolean check(int a)
-    //public boolean checkMate(int a)
+        public boolean check(int a)
+    {
+        ArrayList<Piece> player_pieces = getPlayerPieces(Piece.getOpponent(a));
+        Piece general = getPlayerGeneral(a);
+        Pair general_xy = new Pair (general.getX(), general.getY());
+        
+        for (int i = 0; i < player_pieces.size(); ++i)
+        {
+            Piece temp = player_pieces.get(i);
+            ArrayList<Pair> check_moves = temp.availableMove(this);
+            if (contains(check_moves, general_xy))
+                return true;
+            
+        }
+        return false;
+    }
+    
+    private static boolean contains (ArrayList<Pair> a, Pair b)
+    {
+        for (int i = 0; i < a.size(); ++i)
+        {
+            if (a.get(i).equals(b))
+                return true;
+        }
+        return false;
+    }
+    
+    //should be called at the beginning of the checkmate player turn
+    public boolean checkMate(int a)
+    {
+        ArrayList<Piece> player_pieces = getPlayerPieces(Piece.getOpponent(a));
+        Piece general = getPlayerGeneral(a);
+        ArrayList<Pair> general_moves = general.availableMove(this);
+        
+        for (int i = 0; i < player_pieces.size(); ++i)
+        {
+            Piece temp = player_pieces.get(i);
+            ArrayList<Pair> check_moves = temp.availableMove(this);
+            for (int j = 0; j < general_moves.size(); ++j)
+            {
+                if (contains(check_moves, general_moves.get(j)))
+                {
+                    general_moves.remove(j);
+                    break;
+                }
+            }
+        }
+        return general_moves.isEmpty();
+    }
 
     public void draw(Graphics2D g2d)
     {
@@ -246,10 +293,10 @@ public class Pieces{
     		g2d.fillOval(xPoints[a] - 25, yPoints[b] - 25, 50, 50);
     		//draw name of piece
     		g2d.setColor(Color.WHITE);
-  			if(name.equals("Counselor")) //advisor is same as counselor
-  				g2d.drawString("Advisor", xPoints[a] - 25, yPoints[b]);
-  			else if(name.equals("Elephant"))//shorter name
-  				g2d.drawString("Eleph", xPoints[a] - 15, yPoints[b]);
+                if(name.equals("Counselor")) //advisor is same as counselor
+                        g2d.drawString("Advisor", xPoints[a] - 25, yPoints[b]);
+                else if(name.equals("Elephant"))//shorter name
+                        g2d.drawString("Eleph", xPoints[a] - 15, yPoints[b]);
     		else if(name.equals("Pawn") || name.equals("Horse"))
     			g2d.drawString(name, xPoints[a] - 20, yPoints[b]);
     		 else
