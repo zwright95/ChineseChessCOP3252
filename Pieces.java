@@ -1,14 +1,15 @@
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 
-public class Pieces
+public class Pieces implements Serializable
 {
     private final ArrayList<Piece> pieces;
     private int [][] board_state;
     static Piece error;
     //these represent the points that pieces will be placed on the screen
     static int []xPoints = new int[]{100, 150, 200, 250, 300, 350, 400, 450, 500};
-	static int []yPoints = new int[]{75, 125, 175, 225, 275, 325, 375, 425, 475, 525};
+    static int []yPoints = new int[]{75, 125, 175, 225, 275, 325, 375, 425, 475, 525};
 
     public Pieces(){
     	error = new Piece(100, 100, 0);
@@ -252,27 +253,48 @@ public class Pieces
     }
     
     //should be called at the beginning of the checkmate player turn
-    public boolean checkMate(int a)
+     public boolean checkMate(int a)
     {
-        ArrayList<Piece> player_pieces = getPlayerPieces(Piece.getOpponent(a));
-        Piece general = getPlayerGeneral(a);
-        ArrayList<Pair> general_moves = general.availableMove(this);
+        Pieces copy = getDeepCopy();
+        ArrayList<Piece> player_pieces = getPlayerPieces(a);
         
+        if (check(a) == false)
+            return false;
         for (int i = 0; i < player_pieces.size(); ++i)
         {
-            Piece temp = player_pieces.get(i);
-            ArrayList<Pair> check_moves = temp.availableMove(this);
-            for (int j = 0; j < general_moves.size(); ++j)
+            player_pieces = copy.getPlayerPieces(a);
+            ArrayList<Pair> moves = player_pieces.get(i).availableMove(this);
+            for (int j = 0; j < moves.size(); ++j)
             {
-                if (contains(check_moves, general_moves.get(j)))
-                {
-                    general_moves.remove(j);
-                    break;
-                }
+                Pair move = moves.get(j);
+                player_pieces = copy.getPlayerPieces(a);
+                player_pieces.get(i).moveTo(move.x, move.y, copy);
+                if (copy.check(a) == false)
+                        return false;
+                copy = getDeepCopy();
             }
+            copy = getDeepCopy();
         }
-        return general_moves.isEmpty();
+        return true;
     }
+    
+    public Pieces getDeepCopy () 
+    {
+        try 
+        {
+          ByteArrayOutputStream a = new ByteArrayOutputStream();
+          ObjectOutputStream b = new ObjectOutputStream(a);
+          b.writeObject(this);
+          ByteArrayInputStream c = new ByteArrayInputStream(a.toByteArray());
+          ObjectInputStream d = new ObjectInputStream(c);
+          return (Pieces) d.readObject();
+        }
+        catch (IOException | ClassNotFoundException e) 
+        {
+          return null;
+        }
+    }
+
 
     public void draw(Graphics2D g2d)
     {
