@@ -2,16 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.awt.event.*;
+import java.io.*;
+import java.util.Scanner;
 
 
 public class Game{
-	public static void main(String [] args){
+	public static void main(String [] args) throws IOException{
 		JFrame frame = new JFrame("Xiangqi: Chinese Chess");
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int answer = JOptionPane.showConfirmDialog(frame, "Would you like to load the last saved game?");
-		StartGame game;
-		game = new StartGame(answer);
+		StartGame game = new StartGame(answer);
 		frame.add(game);
 		frame.setSize(700, 750);
 		frame.setVisible(true);
@@ -33,22 +34,44 @@ class StartGame extends JPanel{
 	public StartGame(int newGame){
 		if(newGame == JOptionPane.NO_OPTION)//value is 1
 		{
+			pieces = new Pieces();
 			System.out.println("New");
+			currentPlayer = 1;
 		}	
 		else if(newGame == JOptionPane.YES_OPTION)//load game data value is 0
 		{//pass in something to the Pieces() object to load the previous game
 			//set currentPlayer to correct player
+			try
+			{
+				FileInputStream fis = new FileInputStream("game.txt");
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				ArrayList<Piece> tempPiece = (ArrayList<Piece>) ois.readObject();
+				ois.close();
+				pieces = new Pieces(tempPiece);
+				Scanner s = new Scanner(new File("player.txt"));
+				while(s.hasNextLine())
+				{
+					currentPlayer = Integer.parseInt(s.nextLine());
+				}
+				s.close();
+
+			}
+			catch(IOException | ClassNotFoundException e2)
+			{
+				pieces = new Pieces();
+				currentPlayer = 1;
+			}
 		}
 		else
 		{
+			currentPlayer = 1;
+			pieces = new Pieces();
 			System.exit(0);
 		}
 		board = new DrawBoard();
-		pieces = new Pieces();
 		pointsPressed = 0;
 		pair = null;
 		oldCoords = new Pair();
-		currentPlayer = 1;
 		printStr = "";
 		endGame = false;
 		button1 = new JButton("Save");
@@ -61,7 +84,14 @@ class StartGame extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{//only need to store the arraylist of pieces and the current player
-
+				try
+				{
+					saveGame();
+				}
+				catch(IOException e2) 
+		        {
+		          	System.out.println("Error");
+		        }
 			}
 
 		});
@@ -158,6 +188,20 @@ class StartGame extends JPanel{
       	}
     	});
 		repaint();
+	}
+
+	public void saveGame() throws IOException, FileNotFoundException
+	{
+		FileOutputStream fos = new FileOutputStream("game.txt", false);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(pieces.getPieces());
+		oos.close();
+		//write player
+		FileWriter wr = new FileWriter("player.txt", false);
+		wr.write(String.valueOf(currentPlayer));
+		wr.close();
+		JOptionPane.showOptionDialog(null,"Game Saved.", "Exit Game", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+		System.exit(0);
 	}
 
 	public void finishGame()
