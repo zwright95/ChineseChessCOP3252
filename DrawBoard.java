@@ -13,8 +13,8 @@ public class DrawBoard{
 		
 		*/
 
-	static int []xPoints = new int[]{100, 150, 200, 250, 300, 350, 400, 450, 500};
-	static int []yPoints = new int[]{75, 125, 175, 225, 275, 325, 375, 425, 475, 525};
+	static int []xPoints = new int[]{110, 170, 230, 290, 350, 410, 470, 530, 590};
+	static int []yPoints = new int[]{95, 155, 215, 275, 335, 395, 455, 515, 575, 635};
 	public DrawBoard()
 	{
 
@@ -27,10 +27,10 @@ public class DrawBoard{
 
 		//fill background border
 		g2d.setColor(brown);
-		g2d.fillRect(65, 40, 470, 520);
+		g2d.fillRect(90, 75, 520, 580);
 		//fill board color
 		g2d.setColor(tan);
-		g2d.fillRect(100, 75, 400, 450);
+		g2d.fillRect(110, 95, 480, 540);
 		int x, y;
 		int i = 0, j = 0;
 		//draw first half of board
@@ -38,33 +38,36 @@ public class DrawBoard{
 			for(j = 0; j < 4; j++)
 			{
 				g2d.setColor(brown);
-				x = i * 50 + 100;
-				y = j * 50 + 75;
-				g2d.drawRect(x, y, 50, 50);
+				x = i * 60 + 110;
+				y = j * 60 + 95;
+				g2d.drawRect(x, y, 60, 60);
 			}
 		}
+		
 		//draw river
-		y = j * 50 + 75;
-		g2d.drawRect(100, y, 400, 50);
+		y = j * 60 + 95;
+		g2d.drawRect(110, y, 480, 60);
 		//draw second half of board
+
 		for(i = 0; i < 8; i++)
 		{
-			int oldY = 325;
+			int oldY = 395;
 			for(j = 0; j < 4; j++)
 			{
 				g2d.setColor(brown);
-				x = i * 50 + 100;
-				g2d.drawRect(x, oldY, 50, 50);
-				oldY = oldY + 50;
+				x = i * 60 + 110;
+				g2d.drawRect(x, oldY, 60, 60);
+				oldY = oldY + 60;
 
 			}
 		}
+		
 		//first X
-		g2d.drawLine(250, 75, 350, 175);
-		g2d.drawLine(350, 75, 250, 175);
+		g2d.drawLine(290, 95, 410, 215);
+		g2d.drawLine(410, 95, 290, 215);
 		//second X
-		g2d.drawLine(250, 425, 350, 525);
-		g2d.drawLine(350, 425, 250, 525);
+		g2d.drawLine(290, 515, 410, 635);
+		g2d.drawLine(410, 515, 290, 635);
 	}
 
 }
