@@ -11,11 +11,23 @@ public class Pieces implements Serializable
     static int []xPoints = new int[]{110, 170, 230, 290, 350, 410, 470, 530, 590};
     static int []yPoints = new int[]{95, 155, 215, 275, 335, 395, 455, 515, 575, 635};
 
-    public Pieces(){
+    public Pieces(ArrayList<Piece> ... arr){
     	error = new Piece(100, 100, 0);
-    	pieces = new ArrayList<>(32);
-    	initPieces();
+        if(arr.length > 0)//if game is being loaded
+        {
+            pieces = arr[0];
+        }
+        else
+        {
+            pieces = new ArrayList<>(32);
+            initPieces();
+        }
     	updateBoardState();
+    }
+
+    public ArrayList<Piece> getPieces()
+    {
+        return pieces;
     }
 
     private void initPieces()
