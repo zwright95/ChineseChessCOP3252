@@ -8,8 +8,8 @@ public class Pieces implements Serializable
     private int [][] board_state;
     static Piece error;
     //these represent the points that pieces will be placed on the screen
-    static int []xPoints = new int[]{100, 150, 200, 250, 300, 350, 400, 450, 500};
-    static int []yPoints = new int[]{75, 125, 175, 225, 275, 325, 375, 425, 475, 525};
+    static int []xPoints = new int[]{110, 170, 230, 290, 350, 410, 470, 530, 590};
+    static int []yPoints = new int[]{95, 155, 215, 275, 335, 395, 455, 515, 575, 635};
 
     public Pieces(){
     	error = new Piece(100, 100, 0);
@@ -134,9 +134,11 @@ public class Pieces implements Serializable
 		return new Pair(pieceX, pieceY);
     }
     //function to actually move the piece
-    public String movePiece(Piece piece, Pair pair)
+    public String movePiece(Piece piece, Pair pair, Pair oldCoords)
     {
     	String retString = "";
+        Piece removedPiece = null;
+        boolean didRemove = false;
     	for(int i = 0; i < pieces.size(); i++)
     	{
     		Piece temp = pieces.get(i);
@@ -146,7 +148,9 @@ public class Pieces implements Serializable
     			//check if opponent piece
     			if(temp.getPlayer() != piece.getPlayer())
     			{
+                    removedPiece = temp;
     				pieces.remove(i); //remove old piece
+                    didRemove = true;
     				retString = "Player " + piece.getPlayer() + " captured a piece!";
     				break;
     			}
@@ -172,6 +176,15 @@ public class Pieces implements Serializable
     	piece.setX(pair.x);
     	piece.setY(pair.y);
     	pieces.set(index, piece);
+        if(check(piece.getPlayer()) == true)//put self in check
+        {
+            piece.setX(oldCoords.x);
+            piece.setY(oldCoords.y);
+            pieces.set(index, piece);
+            if(didRemove == true)   //readd removed piece
+                pieces.add(removedPiece);
+            retString = "Cannot put self in check!";
+        }
     	if(retString.equals(""))
     		retString = "Moved piece to: " + pair.x + ", " + pair.y;
     	return retString;
@@ -225,7 +238,7 @@ public class Pieces implements Serializable
         return player_pieces;
     }
 
-        public boolean check(int a)
+    public boolean check(int a)
     {
         ArrayList<Piece> player_pieces = getPlayerPieces(Piece.getOpponent(a));
         Piece general = getPlayerGeneral(a);
@@ -250,6 +263,19 @@ public class Pieces implements Serializable
                 return true;
         }
         return false;
+    }
+
+    public boolean staleMate(int a)
+    {//see if current player has no legal moves
+        ArrayList<Piece> player_pieces = getPlayerPieces(a);
+        ArrayList<Pair> allMoves = new ArrayList<Pair>();
+        for(int i = 0; i < player_pieces.size(); ++i)
+        {
+            Piece temp = player_pieces.get(i);
+            allMoves.addAll(temp.availableMove(this));
+        }
+
+        return allMoves.isEmpty();
     }
     
     //should be called at the beginning of the checkmate player turn
@@ -312,17 +338,17 @@ public class Pieces implements Serializable
     		int b = temp.getY();
     		String name = temp.getClass().getSimpleName();
     		//draw piece
-    		g2d.fillOval(xPoints[a] - 25, yPoints[b] - 25, 50, 50);
+    		g2d.fillOval(xPoints[a] - 30, yPoints[b] - 30, 60, 60);
     		//draw name of piece
     		g2d.setColor(Color.WHITE);
                 if(name.equals("Counselor")) //advisor is same as counselor
-                        g2d.drawString("Advisor", xPoints[a] - 25, yPoints[b]);
+                        g2d.drawString("Advisor", xPoints[a] - 30, yPoints[b]);
                 else if(name.equals("Elephant"))//shorter name
-                        g2d.drawString("Eleph", xPoints[a] - 15, yPoints[b]);
+                        g2d.drawString("Elephant", xPoints[a] - 30, yPoints[b]);
     		else if(name.equals("Pawn") || name.equals("Horse"))
     			g2d.drawString(name, xPoints[a] - 20, yPoints[b]);
     		 else
-    			g2d.drawString(name, xPoints[a] - 25, yPoints[b]);
+    			g2d.drawString(name, xPoints[a] - 30, yPoints[b]);
     	}
 
     }
