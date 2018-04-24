@@ -148,6 +148,7 @@ class StartGame extends JPanel{
 					        if(move.x == pair.x && move.y == pair.y)//move position was valid
 					        {//going to move the piece here
 					        	String ret = pieces.movePiece(piece, pair, oldCoords);
+					        	printStr = ret;
 					        	if(!ret.equals("Cannot put self in check!")){
 						        	printStr = ret;	//get the return value to let the player know what type of move happened
 						        	getOpposite(); //change player and change turn
@@ -175,7 +176,6 @@ class StartGame extends JPanel{
 						        		finishGame(); //end game 
 						        	}
 					       		}
-					       		printStr = ret;
 					        	break;
 					        }
 					    }
