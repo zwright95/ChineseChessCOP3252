@@ -5,7 +5,7 @@ How to use the game:
 
 To start the game select whether you want to play a new game or resume the last saved game. Only the most recent saved game can be played.
 
-Black is player 1 and red is player 2. Some popular variations of this game have this listed as the other way around but it made more sense logically for the top pieces to go first. The screen is not resizable because the size of the window is important for the proportions of the pieces and the board.
+Black is player 1 and red is player 2. The screen is not resizable because the size of the window is important for the proportions of the pieces and the board.
 
 To move pieces press the center of the piece and then the center of the point you are moving it to. The program will alert you if you did something wrong. When a correct piece is clicked a button sound will be heard. When a piece is moved to a correct spot, a swoosh sound will be heard. A player can win by putting their opponent in checkmate or by their opponent not having any possible moves. With some features being extremely difficult to implement in code, like perpetual checks and chases, there is a button that can be pressed to forfeit the game in the case of players only being able to chase each other. When a game is won, the program will present a pop up saying which player won and the application will close when the user closes the pop up.
 
