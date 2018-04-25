@@ -14,8 +14,10 @@ public class Cannon extends Piece
        
         boolean flag = false;
         boolean flag2 = true;
+        //add all move in four direction
         for (int i = x + 1; i < 9; ++i)
         {
+            //add all move until another piece
             if (board_state[i][y] == 0 && flag2 == true)
                 available.add(new Pair(i, y));
             else if (board_state[i][y] != 0 && flag == false)
@@ -23,6 +25,7 @@ public class Cannon extends Piece
                 flag = true;
                 flag2 = false;
             }
+            //add enemy attack move
             else if (board_state[i][y] == getOpponent(player) && flag == true)
             {
                 available.add(new Pair(i, y));
@@ -83,7 +86,6 @@ public class Cannon extends Piece
                 break;
             }    
         }
-        
         return available;
     }
 }

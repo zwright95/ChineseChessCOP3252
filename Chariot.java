@@ -11,7 +11,7 @@ public class Chariot extends Piece
     {
         int [][] board_state = board.getState();
         ArrayList<Pair> available = new ArrayList<> ();
-        
+        //add all moves until own piece or on enemy piece
         for (int i = x + 1; i < 9; ++i)
         {
             if (board_state[i][y] == 0)

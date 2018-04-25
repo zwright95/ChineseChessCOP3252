@@ -29,7 +29,7 @@ public class Counselor extends Piece
             y_lower = 7;
             y_upper = 9;
         }
-        
+        //remove move out of bound
         for (int i = 0; i < available.size(); ++i)
         {
             Pair temp = available.get(i);
