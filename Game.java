@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.awt.event.*;
 import java.io.*;
 import java.util.Scanner;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioSystem;
 
 
 public class Game{
@@ -86,6 +89,7 @@ class StartGame extends JPanel{
 			{//only need to store the arraylist of pieces and the current player
 				try
 				{
+					playSound("button.wav");
 					saveGame();
 				}
 				catch(IOException e2) 
@@ -100,6 +104,7 @@ class StartGame extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				playSound("button.wav");
 				getOpposite();
 				printStr = "Player " + currentPlayer + ", you win!";
 				finishGame();
@@ -124,6 +129,7 @@ class StartGame extends JPanel{
 	        				printStr = "Selected piece: " + piece.getX() + ", " + piece.getY();
 	        				oldCoords.x = piece.getX();
 	        				oldCoords.y = piece.getY();
+	        				playSound("button.wav");
 	        			}
 	        		}
 	        		else{//print error message and decrease points pressed to reselect piece
@@ -152,7 +158,7 @@ class StartGame extends JPanel{
 					        	if(!ret.equals("Cannot put self in check!")){
 						        	printStr = ret;	//get the return value to let the player know what type of move happened
 						        	getOpposite(); //change player and change turn
-
+						        	playSound("swoosh.wav");
 						        	//start of new player move
 						        	if(pieces.check(currentPlayer) == true)//check if current player is in check
 						        	{
@@ -188,6 +194,22 @@ class StartGame extends JPanel{
       	}
     	});
 		repaint();
+	}
+
+	public void playSound(String name)
+	{
+		try
+		{
+			AudioInputStream in = AudioSystem.getAudioInputStream(new File(name).getAbsoluteFile( ));
+			Clip clip = AudioSystem.getClip();
+			clip.open(in);
+			clip.start();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("Error with playing sound.");
+    		ex.printStackTrace( );
+		}
 	}
 
 	public void saveGame() throws IOException, FileNotFoundException
@@ -234,3 +256,4 @@ class StartGame extends JPanel{
 
 	}
 }
+
