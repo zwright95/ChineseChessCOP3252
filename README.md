@@ -1,4 +1,4 @@
-# ChineseChessCOP3252
+# ChineseChess
 Project by Zachary Wright and Hao Chai
 
 How to use the game:
